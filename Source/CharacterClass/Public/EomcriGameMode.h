@@ -8,4 +8,7 @@ UCLASS()
 class CHARACTERCLASS_API AEomcriGameMode : public AGameMode
 {
 	GENERATED_BODY()
+
+public:
+	AEomcriGameMode();
 };
