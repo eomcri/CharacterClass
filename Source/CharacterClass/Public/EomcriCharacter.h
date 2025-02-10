@@ -6,24 +6,26 @@
 #include "GameFramework/Character.h"
 #include "EomcriCharacter.generated.h"
 
+class USpringArmComponent; // 스프링 암 관련 클래스 헤더
+class UCameraComponent; // 카메라 관련 클래스 전방 선언
+
 UCLASS()
 class CHARACTERCLASS_API AEomcriCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	AEomcriCharacter();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	// 스프링 암 컴포넌트
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	USpringArmComponent* SpringArmComp;
+	// 카메라 컴포넌트
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	UCameraComponent* CameraComp;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };
