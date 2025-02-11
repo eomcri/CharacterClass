@@ -7,6 +7,7 @@
 // 카메라, 스프링 암 실제 구현이 필요한 경우라서 include
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AEomcriCharacter::AEomcriCharacter()
@@ -29,6 +30,12 @@ AEomcriCharacter::AEomcriCharacter()
     CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
     // 카메라는 스프링 암의 회전을 따르므로 PawnControlRotation은 꺼둠
     CameraComp->bUsePawnControlRotation = false;
+
+    NormalSpeed = 600.0f;
+    SprintSpeedMultiplier = 1.5f;
+    SprintSpeed = NormalSpeed * SprintSpeedMultiplier;
+
+    GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
 }
 
 // Called to bind functionality to input
@@ -128,21 +135,51 @@ void AEomcriCharacter::Move(const FInputActionValue & value)
 
 void AEomcriCharacter::StartJump(const FInputActionValue & value)
 {
+    // Jump 함수는 Character가 기본 제공
+    if (value.Get<bool>())
+    {
+        Jump();
+    }
 }
 
 void AEomcriCharacter::StopJump(const FInputActionValue & value)
 {
+    // StopJumping 함수도 Character가 기본 제공
+    if (!value.Get<bool>())
+    {
+        StopJumping();
+    }
 }
 
 void AEomcriCharacter::Look(const FInputActionValue & value)
 {
+    // 마우스의 X, Y 움직임을 2D 축으로 가져옴
+    FVector2D LookInput = value.Get<FVector2D>();
+
+    // X는 좌우 회전 (Yaw), Y는 상하 회전 (Pitch)
+    // 좌우 회전
+    AddControllerYawInput(LookInput.X);
+    // 상하 회전
+    AddControllerPitchInput(LookInput.Y);
 }
 
 void AEomcriCharacter::StartSprint(const FInputActionValue & value)
 {
+    // Shift 키를 누른 순간 이 함수가 호출된다고 가정
+    // 스프린트 속도를 적용
+    if (GetCharacterMovement())
+    {
+        GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+    }
 }
 
 void AEomcriCharacter::StopSprint(const FInputActionValue & value)
 {
+    // Shift 키를 뗀 순간 이 함수가 호출
+    // 평상시 속도로 복귀
+    if (GetCharacterMovement())
+    {
+        GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+    }
 }
 
