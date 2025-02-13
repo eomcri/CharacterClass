@@ -19,14 +19,21 @@ class CHARACTERCLASS_API AEomcriCharacter : public ACharacter
 public:
 	AEomcriCharacter();
 
-protected:
-
 	// 스프링 암 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	USpringArmComponent* SpringArmComp;
 	// 카메라 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComp;
+
+	// 현재 체력을 가져오는 함수
+	UFUNCTION(BlueprintPure, Category = "Health")
+	float GetHealth() const;
+	// 체력을 회복시키는 함수
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	void AddHealth(float Amount);
+
+protected:
 
 	// 이동 속도 관련 프로퍼티들
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
@@ -35,6 +42,20 @@ protected:
 	float SprintSpeedMultiplier;  // "기본 속도" 대비 몇 배로 빠르게 달릴지 결정
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	float SprintSpeed; 	// 실제 스프린트 속도
+
+	// 최대 체력
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float MaxHealth;
+	// 현재 체력
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Health")
+	float Health;
+	// 사망 처리 함수 (체력이 0 이하가 되었을 때 호출)
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	virtual void OnDeath();
+
+	// 데미지 처리 함수 - 외부로부터 데미지를 받을 때 호출됨
+	// 또는 AActor의 TakeDamage()를 오버라이드
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

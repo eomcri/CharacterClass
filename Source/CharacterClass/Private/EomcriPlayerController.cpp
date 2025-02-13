@@ -1,12 +1,20 @@
-#include "EomcriPlayerController.h"
-#include "EnhancedInputSubsystems.h" // Enhanced Input SystemÀÇ Local Player SubsystemÀ» »ç¿ëÇÏ±â À§ÇØ Æ÷ÇÔ
+ï»¿#include "EomcriPlayerController.h"
+#include "EnhancedInputSubsystems.h" // Enhanced Input Systemì˜ Local Player Subsystemì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ í¬í•¨
+#include "EomcriGameInstance.h"
+#include "EomcriGameState.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 
 AEomcriPlayerController::AEomcriPlayerController()
     : InputMappingContext(nullptr),
     MoveAction(nullptr),
     JumpAction(nullptr),
     LookAction(nullptr),
-    SprintAction(nullptr)
+    SprintAction(nullptr),
+    HUDWidgetInstance(nullptr),
+	MainMenuWidgetClass(nullptr),
+	MainMenuWidgetInstance(nullptr)
 {
 }
 
@@ -14,18 +22,114 @@ void AEomcriPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-    // ÇöÀç PlayerController¿¡ ¿¬°áµÈ Local Player °´Ã¼¸¦ °¡Á®¿È    
+    // í˜„ìž¬ PlayerControllerì— ì—°ê²°ëœ Local Player ê°ì²´ë¥¼ ê°€ì ¸ì˜´    
     if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
     {
-        // Local Player¿¡¼­ EnhancedInputLocalPlayerSubsystemÀ» È¹µæ
+        // Local Playerì—ì„œ EnhancedInputLocalPlayerSubsystemì„ íšë“
         if (UEnhancedInputLocalPlayerSubsystem* Subsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
         {
             if (InputMappingContext)
             {
-                // SubsystemÀ» ÅëÇØ ¿ì¸®°¡ ÇÒ´çÇÑ IMC¸¦ È°¼ºÈ­
-                // ¿ì¼±¼øÀ§(Priority)´Â 0ÀÌ °¡Àå ³ôÀº ¿ì¼±¼øÀ§
+                // Subsystemì„ í†µí•´ ìš°ë¦¬ê°€ í• ë‹¹í•œ IMCë¥¼ í™œì„±í™”
+                // ìš°ì„ ìˆœìœ„(Priority)ëŠ” 0ì´ ê°€ìž¥ ë†’ì€ ìš°ì„ ìˆœìœ„
                 Subsystem->AddMappingContext(InputMappingContext, 0);
             }
         }
     }
+
+    FString CurrentMapName = GetWorld()->GetMapName();
+    if (CurrentMapName.Contains("MenuLevel"))
+    {
+        ShowMainMenu(false);
+    }
 }
+
+UUserWidget* AEomcriPlayerController::GetHUDWidget() const
+{
+    return HUDWidgetInstance;
+}
+
+void AEomcriPlayerController::ShowMainMenu(bool bIsRestart)
+{
+    if (HUDWidgetInstance)
+    {
+        HUDWidgetInstance->RemoveFromParent();
+        HUDWidgetInstance = nullptr;
+    }
+
+    if (MainMenuWidgetInstance)
+    {
+        MainMenuWidgetInstance->RemoveFromParent();
+        MainMenuWidgetInstance = nullptr;
+    }
+
+    if (MainMenuWidgetInstance)
+    {
+        MainMenuWidgetInstance = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
+        if (MainMenuWidgetInstance)
+        {
+            MainMenuWidgetInstance->AddToViewport();
+
+            bShowMouseCursor = true;
+            SetInputMode(FInputModeUIOnly());
+        }
+
+        if (UTextBlock* ButtonText = Cast<UTextBlock>(MainMenuWidgetInstance->GetWidgetFromName(TEXT("StartButtonText"))))
+        {
+	        if (bIsRestart)
+	        {
+                ButtonText->SetText(FText::FromString(TEXT("Restart")));
+	        }
+            else
+            {
+                ButtonText->SetText(FText::FromString(TEXT("Start")));
+            }
+        }
+    }
+}
+
+void AEomcriPlayerController::ShowGameHUD()
+{
+    if (HUDWidgetInstance)
+    {
+        HUDWidgetInstance->RemoveFromParent();
+        HUDWidgetInstance = nullptr;
+    }
+
+    if (MainMenuWidgetInstance)
+    {
+        MainMenuWidgetInstance->RemoveFromParent();
+        MainMenuWidgetInstance = nullptr;
+    }
+
+    if (HUDWidgetInstance)
+    {
+        HUDWidgetInstance = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
+        if (HUDWidgetInstance)
+        {
+            HUDWidgetInstance->AddToViewport();
+
+            bShowMouseCursor = false;
+            SetInputMode(FInputModeGameOnly());
+        }
+
+        AEomcriGameState* EomcriGameState = GetWorld() ? GetWorld()->GetGameState<AEomcriGameState>() : nullptr;
+        if (EomcriGameState)
+        {
+            EomcriGameState->UpdateHUD();
+        }
+    }
+}
+
+void AEomcriPlayerController::StartGame()
+{
+    if (UEomcriGameInstance* EomcriGameInstance = Cast<UEomcriGameInstance>(UGameplayStatics::GetGameInstance(this)))
+    {
+        EomcriGameInstance->CurrentLevelIndex = 0;
+        EomcriGameInstance->TotalScore = 0;
+    }
+
+    UGameplayStatics::OpenLevel(GetWorld(), FName("BasicLevel"));
+}
+
+

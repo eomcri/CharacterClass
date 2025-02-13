@@ -1,10 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "EomcriCharacter.h"
 #include "EomcriPlayerController.h"
 #include "EnhancedInputComponent.h"
-// Ä«¸Ş¶ó, ½ºÇÁ¸µ ¾Ï ½ÇÁ¦ ±¸ÇöÀÌ ÇÊ¿äÇÑ °æ¿ì¶ó¼­ include
+// ì¹´ë©”ë¼, ìŠ¤í”„ë§ ì•” ì‹¤ì œ êµ¬í˜„ì´ í•„ìš”í•œ ê²½ìš°ë¼ì„œ include
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -12,23 +12,23 @@
 // Sets default values
 AEomcriCharacter::AEomcriCharacter()
 {
-    // Tick ÇÔ¼ö´Â ¿ì¼± ²¨µÓ´Ï´Ù.
+    // Tick í•¨ìˆ˜ëŠ” ìš°ì„  êº¼ë‘¡ë‹ˆë‹¤.
     PrimaryActorTick.bCanEverTick = false;
 
-    // (1) ½ºÇÁ¸µ ¾Ï »ı¼º
+    // (1) ìŠ¤í”„ë§ ì•” ìƒì„±
     SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-    // ½ºÇÁ¸µ ¾ÏÀ» ·çÆ® ÄÄÆ÷³ÍÆ® (CapsuleComponent)¿¡ ºÎÂø
+    // ìŠ¤í”„ë§ ì•”ì„ ë£¨íŠ¸ ì»´í¬ë„ŒíŠ¸ (CapsuleComponent)ì— ë¶€ì°©
     SpringArmComp->SetupAttachment(RootComponent);
-    // Ä³¸¯ÅÍ¿Í Ä«¸Ş¶ó »çÀÌÀÇ °Å¸® ±âº»°ª 300À¸·Î ¼³Á¤
+    // ìºë¦­í„°ì™€ ì¹´ë©”ë¼ ì‚¬ì´ì˜ ê±°ë¦¬ ê¸°ë³¸ê°’ 300ìœ¼ë¡œ ì„¤ì •
     SpringArmComp->TargetArmLength = 300.0f;
-    // ÄÁÆ®·Ñ·¯ È¸Àü¿¡ µû¶ó ½ºÇÁ¸µ ¾Ïµµ È¸ÀüÇÏµµ·Ï ¼³Á¤
+    // ì»¨íŠ¸ë¡¤ëŸ¬ íšŒì „ì— ë”°ë¼ ìŠ¤í”„ë§ ì•”ë„ íšŒì „í•˜ë„ë¡ ì„¤ì •
     SpringArmComp->bUsePawnControlRotation = true;
 
-    // (2) Ä«¸Ş¶ó ÄÄÆ÷³ÍÆ® »ı¼º
+    // (2) ì¹´ë©”ë¼ ì»´í¬ë„ŒíŠ¸ ìƒì„±
     CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-    // ½ºÇÁ¸µ ¾ÏÀÇ ¼ÒÄÏ À§Ä¡¿¡ Ä«¸Ş¶ó¸¦ ºÎÂø
+    // ìŠ¤í”„ë§ ì•”ì˜ ì†Œì¼“ ìœ„ì¹˜ì— ì¹´ë©”ë¼ë¥¼ ë¶€ì°©
     CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
-    // Ä«¸Ş¶ó´Â ½ºÇÁ¸µ ¾ÏÀÇ È¸ÀüÀ» µû¸£¹Ç·Î PawnControlRotationÀº ²¨µÒ
+    // ì¹´ë©”ë¼ëŠ” ìŠ¤í”„ë§ ì•”ì˜ íšŒì „ì„ ë”°ë¥´ë¯€ë¡œ PawnControlRotationì€ êº¼ë‘ 
     CameraComp->bUsePawnControlRotation = false;
 
     NormalSpeed = 600.0f;
@@ -36,6 +36,10 @@ AEomcriCharacter::AEomcriCharacter()
     SprintSpeed = NormalSpeed * SprintSpeedMultiplier;
 
     GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+
+    // ì´ˆê¸° ì²´ë ¥ ì„¤ì •
+    MaxHealth = 100.0f;
+    Health = MaxHealth;
 }
 
 // Called to bind functionality to input
@@ -43,15 +47,15 @@ void AEomcriCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-    // Enhanced InputComponent·Î Ä³½ºÆÃ
+    // Enhanced InputComponentë¡œ ìºìŠ¤íŒ…
     if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
-        // IA¸¦ °¡Á®¿À±â À§ÇØ ÇöÀç ¼ÒÀ¯ ÁßÀÎ Controller¸¦ ASpartaPlayerController·Î Ä³½ºÆÃ
+        // IAë¥¼ ê°€ì ¸ì˜¤ê¸° ìœ„í•´ í˜„ì¬ ì†Œìœ  ì¤‘ì¸ Controllerë¥¼ ASpartaPlayerControllerë¡œ ìºìŠ¤íŒ…
         if (AEomcriPlayerController* PlayerController = Cast<AEomcriPlayerController>(GetController()))
         {
             if (PlayerController->MoveAction)
             {
-                // IA_Move ¾×¼Ç Å°¸¦ "Å°¸¦ ´©¸£°í ÀÖ´Â µ¿¾È" Move() È£Ãâ
+                // IA_Move ì•¡ì…˜ í‚¤ë¥¼ "í‚¤ë¥¼ ëˆ„ë¥´ê³  ìˆëŠ” ë™ì•ˆ" Move() í˜¸ì¶œ
                 EnhancedInput->BindAction(
                     PlayerController->MoveAction,
                     ETriggerEvent::Triggered,
@@ -62,7 +66,7 @@ void AEomcriCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
             if (PlayerController->JumpAction)
             {
-                // IA_Jump ¾×¼Ç Å°¸¦ "Å°¸¦ ´©¸£°í ÀÖ´Â µ¿¾È" StartJump() È£Ãâ
+                // IA_Jump ì•¡ì…˜ í‚¤ë¥¼ "í‚¤ë¥¼ ëˆ„ë¥´ê³  ìˆëŠ” ë™ì•ˆ" StartJump() í˜¸ì¶œ
                 EnhancedInput->BindAction(
                     PlayerController->JumpAction,
                     ETriggerEvent::Triggered,
@@ -70,7 +74,7 @@ void AEomcriCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
                     &AEomcriCharacter::StartJump
                 );
 
-                // IA_Jump ¾×¼Ç Å°¿¡¼­ "¼ÕÀ» ¶¾ ¼ø°£" StopJump() È£Ãâ
+                // IA_Jump ì•¡ì…˜ í‚¤ì—ì„œ "ì†ì„ ë—€ ìˆœê°„" StopJump() í˜¸ì¶œ
                 EnhancedInput->BindAction(
                     PlayerController->JumpAction,
                     ETriggerEvent::Completed,
@@ -81,7 +85,7 @@ void AEomcriCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
             if (PlayerController->LookAction)
             {
-                // IA_Look ¾×¼Ç ¸¶¿ì½º°¡ "¿òÁ÷ÀÏ ¶§" Look() È£Ãâ
+                // IA_Look ì•¡ì…˜ ë§ˆìš°ìŠ¤ê°€ "ì›€ì§ì¼ ë•Œ" Look() í˜¸ì¶œ
                 EnhancedInput->BindAction(
                     PlayerController->LookAction,
                     ETriggerEvent::Triggered,
@@ -92,14 +96,14 @@ void AEomcriCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
             if (PlayerController->SprintAction)
             {
-                // IA_Sprint ¾×¼Ç Å°¸¦ "´©¸£°í ÀÖ´Â µ¿¾È" StartSprint() È£Ãâ
+                // IA_Sprint ì•¡ì…˜ í‚¤ë¥¼ "ëˆ„ë¥´ê³  ìˆëŠ” ë™ì•ˆ" StartSprint() í˜¸ì¶œ
                 EnhancedInput->BindAction(
                     PlayerController->SprintAction,
                     ETriggerEvent::Triggered,
                     this,
                     &AEomcriCharacter::StartSprint
                 );
-                // IA_Sprint ¾×¼Ç Å°¿¡¼­ "¼ÕÀ» ¶¾ ¼ø°£" StopSprint() È£Ãâ
+                // IA_Sprint ì•¡ì…˜ í‚¤ì—ì„œ "ì†ì„ ë—€ ìˆœê°„" StopSprint() í˜¸ì¶œ
                 EnhancedInput->BindAction(
                     PlayerController->SprintAction,
                     ETriggerEvent::Completed,
@@ -113,29 +117,29 @@ void AEomcriCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void AEomcriCharacter::Move(const FInputActionValue & value)
 {
-    // ÄÁÆ®·Ñ·¯°¡ ÀÖ¾î¾ß ¹æÇâ °è»êÀÌ °¡´É
+    // ì»¨íŠ¸ë¡¤ëŸ¬ê°€ ìˆì–´ì•¼ ë°©í–¥ ê³„ì‚°ì´ ê°€ëŠ¥
     if (!Controller) return;
 
-    // Value´Â Axis2D·Î ¼³Á¤µÈ IA_MoveÀÇ ÀÔ·Â°ª (WASD)À» ´ã°í ÀÖÀ½
-// ¿¹) (X=1, Y=0) ¡æ ÀüÁø / (X=-1, Y=0) ¡æ ÈÄÁø / (X=0, Y=1) ¡æ ¿À¸¥ÂÊ / (X=0, Y=-1) ¡æ ¿ŞÂÊ
+    // ValueëŠ” Axis2Dë¡œ ì„¤ì •ëœ IA_Moveì˜ ì…ë ¥ê°’ (WASD)ì„ ë‹´ê³  ìˆìŒ
+// ì˜ˆ) (X=1, Y=0) â†’ ì „ì§„ / (X=-1, Y=0) â†’ í›„ì§„ / (X=0, Y=1) â†’ ì˜¤ë¥¸ìª½ / (X=0, Y=-1) â†’ ì™¼ìª½
     const FVector2D MoveInput = value.Get<FVector2D>();
 
     if (!FMath::IsNearlyZero(MoveInput.X))
     {
-        // Ä³¸¯ÅÍ°¡ ¹Ù¶óº¸´Â ¹æÇâ(Á¤¸é)À¸·Î XÃà ÀÌµ¿
+        // ìºë¦­í„°ê°€ ë°”ë¼ë³´ëŠ” ë°©í–¥(ì •ë©´)ìœ¼ë¡œ Xì¶• ì´ë™
         AddMovementInput(GetActorForwardVector(), MoveInput.X);
     }
 
     if (!FMath::IsNearlyZero(MoveInput.Y))
     {
-        // Ä³¸¯ÅÍÀÇ ¿À¸¥ÂÊ ¹æÇâÀ¸·Î YÃà ÀÌµ¿
+        // ìºë¦­í„°ì˜ ì˜¤ë¥¸ìª½ ë°©í–¥ìœ¼ë¡œ Yì¶• ì´ë™
         AddMovementInput(GetActorRightVector(), MoveInput.Y);
     }
 }
 
 void AEomcriCharacter::StartJump(const FInputActionValue & value)
 {
-    // Jump ÇÔ¼ö´Â Character°¡ ±âº» Á¦°ø
+    // Jump í•¨ìˆ˜ëŠ” Characterê°€ ê¸°ë³¸ ì œê³µ
     if (value.Get<bool>())
     {
         Jump();
@@ -144,7 +148,7 @@ void AEomcriCharacter::StartJump(const FInputActionValue & value)
 
 void AEomcriCharacter::StopJump(const FInputActionValue & value)
 {
-    // StopJumping ÇÔ¼öµµ Character°¡ ±âº» Á¦°ø
+    // StopJumping í•¨ìˆ˜ë„ Characterê°€ ê¸°ë³¸ ì œê³µ
     if (!value.Get<bool>())
     {
         StopJumping();
@@ -153,20 +157,20 @@ void AEomcriCharacter::StopJump(const FInputActionValue & value)
 
 void AEomcriCharacter::Look(const FInputActionValue & value)
 {
-    // ¸¶¿ì½ºÀÇ X, Y ¿òÁ÷ÀÓÀ» 2D ÃàÀ¸·Î °¡Á®¿È
+    // ë§ˆìš°ìŠ¤ì˜ X, Y ì›€ì§ì„ì„ 2D ì¶•ìœ¼ë¡œ ê°€ì ¸ì˜´
     FVector2D LookInput = value.Get<FVector2D>();
 
-    // X´Â ÁÂ¿ì È¸Àü (Yaw), Y´Â »óÇÏ È¸Àü (Pitch)
-    // ÁÂ¿ì È¸Àü
+    // XëŠ” ì¢Œìš° íšŒì „ (Yaw), YëŠ” ìƒí•˜ íšŒì „ (Pitch)
+    // ì¢Œìš° íšŒì „
     AddControllerYawInput(LookInput.X);
-    // »óÇÏ È¸Àü
+    // ìƒí•˜ íšŒì „
     AddControllerPitchInput(LookInput.Y);
 }
 
 void AEomcriCharacter::StartSprint(const FInputActionValue & value)
 {
-    // Shift Å°¸¦ ´©¸¥ ¼ø°£ ÀÌ ÇÔ¼ö°¡ È£ÃâµÈ´Ù°í °¡Á¤
-    // ½ºÇÁ¸°Æ® ¼Óµµ¸¦ Àû¿ë
+    // Shift í‚¤ë¥¼ ëˆ„ë¥¸ ìˆœê°„ ì´ í•¨ìˆ˜ê°€ í˜¸ì¶œëœë‹¤ê³  ê°€ì •
+    // ìŠ¤í”„ë¦°íŠ¸ ì†ë„ë¥¼ ì ìš©
     if (GetCharacterMovement())
     {
         GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
@@ -175,11 +179,52 @@ void AEomcriCharacter::StartSprint(const FInputActionValue & value)
 
 void AEomcriCharacter::StopSprint(const FInputActionValue & value)
 {
-    // Shift Å°¸¦ ¶¾ ¼ø°£ ÀÌ ÇÔ¼ö°¡ È£Ãâ
-    // Æò»ó½Ã ¼Óµµ·Î º¹±Í
+    // Shift í‚¤ë¥¼ ë—€ ìˆœê°„ ì´ í•¨ìˆ˜ê°€ í˜¸ì¶œ
+    // í‰ìƒì‹œ ì†ë„ë¡œ ë³µê·€
     if (GetCharacterMovement())
     {
         GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
     }
+}
+
+float AEomcriCharacter::GetHealth() const
+{
+	return Health;
+}
+
+// ì²´ë ¥ íšŒë³µ í•¨ìˆ˜
+void AEomcriCharacter::AddHealth(float Amount)
+{
+    // ì²´ë ¥ì„ íšŒë³µì‹œí‚´. ìµœëŒ€ ì²´ë ¥ì„ ì´ˆê³¼í•˜ì§€ ì•Šë„ë¡ ì œí•œí•¨
+    Health = FMath::Clamp(Health + Amount, 0.0f, MaxHealth);
+    UE_LOG(LogTemp, Log, TEXT("Health increased to: %f"), Health);
+}
+
+// ë°ë¯¸ì§€ ì²˜ë¦¬ í•¨ìˆ˜
+float AEomcriCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+    // ê¸°ë³¸ ë°ë¯¸ì§€ ì²˜ë¦¬ ë¡œì§ í˜¸ì¶œ (í•„ìˆ˜ëŠ” ì•„ë‹˜)
+    float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+    // ì²´ë ¥ì„ ë°ë¯¸ì§€ë§Œí¼ ê°ì†Œì‹œí‚¤ê³ , 0 ì´í•˜ë¡œ ë–¨ì–´ì§€ì§€ ì•Šë„ë¡ Clamp
+    Health = FMath::Clamp(Health - DamageAmount, 0.0f, MaxHealth);
+    UE_LOG(LogTemp, Warning, TEXT("Health decreased to: %f"), Health);
+
+    // ì²´ë ¥ì´ 0 ì´í•˜ê°€ ë˜ë©´ ì‚¬ë§ ì²˜ë¦¬
+    if (Health <= 0.0f)
+    {
+        OnDeath();
+    }
+
+    // ì‹¤ì œ ì ìš©ëœ ë°ë¯¸ì§€ë¥¼ ë°˜í™˜
+    return ActualDamage;
+}
+
+// ì‚¬ë§ ì²˜ë¦¬ í•¨ìˆ˜
+void AEomcriCharacter::OnDeath()
+{
+    UE_LOG(LogTemp, Error, TEXT("Character is Dead!"));
+
+    // ì‚¬ë§ í›„ ë¡œì§
 }
 
