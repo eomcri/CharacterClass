@@ -1,4 +1,4 @@
-#include "SmallCoinItem.h"
+﻿#include "SmallCoinItem.h"
 
 ASmallCoinItem::ASmallCoinItem()
 {

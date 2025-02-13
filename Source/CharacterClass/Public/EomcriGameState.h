@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameState.h"
@@ -14,7 +14,7 @@ public:
 
 	virtual void BeginPlay() override;
 
-	// Àü¿ª Á¡¼ö¸¦ ÀúÀåÇÏ´Â º¯¼ö
+	// ì „ì—­ ì ìˆ˜ë¥¼ ì €ì¥í•˜ëŠ” ë³€ìˆ˜
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Score")
 	int32 Score;
 
@@ -38,10 +38,10 @@ public:
 	FTimerHandle LevelTimerHandle;
 	FTimerHandle HUDUpdateTimerHandle;
 
-	// ÇöÀç Á¡¼ö¸¦ ÀĞ´Â ÇÔ¼ö
+	// í˜„ì¬ ì ìˆ˜ë¥¼ ì½ëŠ” í•¨ìˆ˜
 	UFUNCTION(BlueprintPure, Category = "Score")
 	int32 GetScore() const;
-	// Á¡¼ö¸¦ Ãß°¡ÇØÁÖ´Â ÇÔ¼ö
+	// ì ìˆ˜ë¥¼ ì¶”ê°€í•´ì£¼ëŠ” í•¨ìˆ˜
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	void AddScore(int32 Amount);
 	UFUNCTION(BlueprintCallable, Category = "Level")

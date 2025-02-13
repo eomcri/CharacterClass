@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -6,9 +6,9 @@
 #include "GameFramework/Character.h"
 #include "EomcriCharacter.generated.h"
 
-class USpringArmComponent; // ½ºÇÁ¸µ ¾Ï °ü·Ã Å¬·¡½º Çì´õ
-class UCameraComponent; // Ä«¸Ş¶ó °ü·Ã Å¬·¡½º Àü¹æ ¼±¾ğ
-// Enhanced Input¿¡¼­ ¾×¼Ç °ªÀ» ¹ŞÀ» ¶§ »ç¿ëÇÏ´Â ±¸Á¶Ã¼
+class USpringArmComponent; // ìŠ¤í”„ë§ ì•” ê´€ë ¨ í´ë˜ìŠ¤ í—¤ë”
+class UCameraComponent; // ì¹´ë©”ë¼ ê´€ë ¨ í´ë˜ìŠ¤ ì „ë°© ì„ ì–¸
+// Enhanced Inputì—ì„œ ì•¡ì…˜ ê°’ì„ ë°›ì„ ë•Œ ì‚¬ìš©í•˜ëŠ” êµ¬ì¡°ì²´
 struct FInputActionValue;
 
 UCLASS()
@@ -19,49 +19,49 @@ class CHARACTERCLASS_API AEomcriCharacter : public ACharacter
 public:
 	AEomcriCharacter();
 
-	// ½ºÇÁ¸µ ¾Ï ÄÄÆ÷³ÍÆ®
+	// ìŠ¤í”„ë§ ì•” ì»´í¬ë„ŒíŠ¸
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	USpringArmComponent* SpringArmComp;
-	// Ä«¸Ş¶ó ÄÄÆ÷³ÍÆ®
+	// ì¹´ë©”ë¼ ì»´í¬ë„ŒíŠ¸
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComp;
 
-	// ÇöÀç Ã¼·ÂÀ» °¡Á®¿À´Â ÇÔ¼ö
+	// í˜„ì¬ ì²´ë ¥ì„ ê°€ì ¸ì˜¤ëŠ” í•¨ìˆ˜
 	UFUNCTION(BlueprintPure, Category = "Health")
 	float GetHealth() const;
-	// Ã¼·ÂÀ» È¸º¹½ÃÅ°´Â ÇÔ¼ö
+	// ì²´ë ¥ì„ íšŒë³µì‹œí‚¤ëŠ” í•¨ìˆ˜
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void AddHealth(float Amount);
 
 protected:
 
-	// ÀÌµ¿ ¼Óµµ °ü·Ã ÇÁ·ÎÆÛÆ¼µé
+	// ì´ë™ ì†ë„ ê´€ë ¨ í”„ë¡œí¼í‹°ë“¤
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	float NormalSpeed; // ±âº» °È±â ¼Óµµ
+	float NormalSpeed; // ê¸°ë³¸ ê±·ê¸° ì†ë„
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	float SprintSpeedMultiplier;  // "±âº» ¼Óµµ" ´ëºñ ¸î ¹è·Î ºü¸£°Ô ´Ş¸±Áö °áÁ¤
+	float SprintSpeedMultiplier;  // "ê¸°ë³¸ ì†ë„" ëŒ€ë¹„ ëª‡ ë°°ë¡œ ë¹ ë¥´ê²Œ ë‹¬ë¦´ì§€ ê²°ì •
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
-	float SprintSpeed; 	// ½ÇÁ¦ ½ºÇÁ¸°Æ® ¼Óµµ
+	float SprintSpeed; 	// ì‹¤ì œ ìŠ¤í”„ë¦°íŠ¸ ì†ë„
 
-	// ÃÖ´ë Ã¼·Â
+	// ìµœëŒ€ ì²´ë ¥
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth;
-	// ÇöÀç Ã¼·Â
+	// í˜„ì¬ ì²´ë ¥
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Health")
 	float Health;
-	// »ç¸Á Ã³¸® ÇÔ¼ö (Ã¼·ÂÀÌ 0 ÀÌÇÏ°¡ µÇ¾úÀ» ¶§ È£Ãâ)
+	// ì‚¬ë§ ì²˜ë¦¬ í•¨ìˆ˜ (ì²´ë ¥ì´ 0 ì´í•˜ê°€ ë˜ì—ˆì„ ë•Œ í˜¸ì¶œ)
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	virtual void OnDeath();
 
-	// µ¥¹ÌÁö Ã³¸® ÇÔ¼ö - ¿ÜºÎ·ÎºÎÅÍ µ¥¹ÌÁö¸¦ ¹ŞÀ» ¶§ È£ÃâµÊ
-	// ¶Ç´Â AActorÀÇ TakeDamage()¸¦ ¿À¹ö¶óÀÌµå
+	// ë°ë¯¸ì§€ ì²˜ë¦¬ í•¨ìˆ˜ - ì™¸ë¶€ë¡œë¶€í„° ë°ë¯¸ì§€ë¥¼ ë°›ì„ ë•Œ í˜¸ì¶œë¨
+	// ë˜ëŠ” AActorì˜ TakeDamage()ë¥¼ ì˜¤ë²„ë¼ì´ë“œ
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// IA_Move¿Í IA_Jump µîÀ» Ã³¸®ÇÒ ÇÔ¼ö ¿øÇü
-	// Enhanced Input¿¡¼­ ¾×¼Ç °ªÀº FInputActionValue·Î Àü´ŞµË´Ï´Ù.
+	// IA_Moveì™€ IA_Jump ë“±ì„ ì²˜ë¦¬í•  í•¨ìˆ˜ ì›í˜•
+	// Enhanced Inputì—ì„œ ì•¡ì…˜ ê°’ì€ FInputActionValueë¡œ ì „ë‹¬ë©ë‹ˆë‹¤.
 	UFUNCTION()
 	void Move(const FInputActionValue& value);
 	UFUNCTION()

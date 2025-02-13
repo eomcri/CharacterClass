@@ -1,4 +1,4 @@
-#include "SpawnVolume.h"
+ï»¿#include "SpawnVolume.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -21,7 +21,7 @@ AActor* ASpawnVolume::SpawnRandomItem()
 	{
 		if (UClass * ActualClass = SelectedRow->ItemClass.Get()) // soft class
 		{
-			// ¿©±â¼­ SpawnItem()À» È£ÃâÇÏ°í, ½ºÆùµÈ AActor Æ÷ÀÎÅÍ¸¦ ¸®ÅÏ
+			// ì—¬ê¸°ì„œ SpawnItem()ì„ í˜¸ì¶œí•˜ê³ , ìŠ¤í°ëœ AActor í¬ì¸í„°ë¥¼ ë¦¬í„´
 			return SpawnItem(ActualClass);
 		}
 	}

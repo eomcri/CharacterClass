@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "MineItem.h"
@@ -40,13 +40,13 @@ void AMineItem::Explode()
 			// Damage Player
 			if (Actor && Actor->ActorHasTag("Player"))
 			{
-				// µ¥¹ÌÁö¸¦ ¹ß»ý½ÃÄÑ Actor->TakeDamage()°¡ ½ÇÇàµÇµµ·Ï ÇÔ
+				// ë°ë¯¸ì§€ë¥¼ ë°œìƒì‹œì¼œ Actor->TakeDamage()ê°€ ì‹¤í–‰ë˜ë„ë¡ í•¨
 				UGameplayStatics::ApplyDamage(
-					Actor,                      // µ¥¹ÌÁö¸¦ ¹ÞÀ» ¾×ÅÍ
-					ExplosionDamage,            // µ¥¹ÌÁö ¾ç
-					nullptr,                    // µ¥¹ÌÁö¸¦ À¯¹ßÇÑ ÁÖÃ¼ (Áö·Ú¸¦ ¼³Ä¡ÇÑ Ä³¸¯ÅÍ°¡ ¾øÀ¸¹Ç·Î nullptr)
-					this,                       // µ¥¹ÌÁö¸¦ À¯¹ßÇÑ ¿ÀºêÁ§Æ®(Áö·Ú)
-					UDamageType::StaticClass()  // ±âº» µ¥¹ÌÁö À¯Çü
+					Actor,                      // ë°ë¯¸ì§€ë¥¼ ë°›ì„ ì•¡í„°
+					ExplosionDamage,            // ë°ë¯¸ì§€ ì–‘
+					nullptr,                    // ë°ë¯¸ì§€ë¥¼ ìœ ë°œí•œ ì£¼ì²´ (ì§€ë¢°ë¥¼ ì„¤ì¹˜í•œ ìºë¦­í„°ê°€ ì—†ìœ¼ë¯€ë¡œ nullptr)
+					this,                       // ë°ë¯¸ì§€ë¥¼ ìœ ë°œí•œ ì˜¤ë¸Œì íŠ¸(ì§€ë¢°)
+					UDamageType::StaticClass()  // ê¸°ë³¸ ë°ë¯¸ì§€ ìœ í˜•
 				);
 			}
 		}

@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "EomcriPlayerController.generated.h"
 
-class UInputMappingContext; // IMC °ü·Ã Àü¹æ ¼±¾ğ
-class UInputAction; // IA °ü·Ã Àü¹æ ¼±¾ğ
+class UInputMappingContext; // IMC ê´€ë ¨ ì „ë°© ì„ ì–¸
+class UInputAction; // IA ê´€ë ¨ ì „ë°© ì„ ì–¸
 
 UCLASS()
 class CHARACTERCLASS_API AEomcriPlayerController : public APlayerController
@@ -15,19 +15,19 @@ class CHARACTERCLASS_API AEomcriPlayerController : public APlayerController
 public:
 	AEomcriPlayerController();
 
-	// ¿¡µğÅÍ¿¡¼­ ¼¼ÆÃÇÒ IMC
+	// ì—ë””í„°ì—ì„œ ì„¸íŒ…í•  IMC
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	UInputMappingContext* InputMappingContext;
-	// IA_Move¸¦ ÁöÁ¤ÇÒ º¯¼ö
+	// IA_Moveë¥¼ ì§€ì •í•  ë³€ìˆ˜
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	UInputAction* MoveAction;
-	// IA_Jump¸¦ ÁöÁ¤ÇÒ º¯¼ö
+	// IA_Jumpë¥¼ ì§€ì •í•  ë³€ìˆ˜
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	UInputAction* JumpAction;
-	// IA_Look¸¦ ÁöÁ¤ÇÒ º¯¼ö
+	// IA_Lookë¥¼ ì§€ì •í•  ë³€ìˆ˜
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	UInputAction* LookAction;
-	// IA_Sprint¸¦ ÁöÁ¤ÇÒ º¯¼ö
+	// IA_Sprintë¥¼ ì§€ì •í•  ë³€ìˆ˜
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	UInputAction* SprintAction;
 
