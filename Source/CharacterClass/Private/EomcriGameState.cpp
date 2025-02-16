@@ -67,8 +67,12 @@ void AEomcriGameState::StartLevel()
 		if (EomcriGameInstance)
 		{
 			CurrentLevelIndex = EomcriGameInstance->CurrentLevelIndex;
+			CurrentWaveIndex = EomcriGameInstance->CurrentWaveIndex;
 		}
 	}
+	UE_LOG(LogTemp, Warning, TEXT("Wave %d Start!"),
+		CurrentWaveIndex+1
+		)
 
 	SpawnedCoinCount = 0;
 	CollectedCoinCount = 0;
@@ -78,7 +82,8 @@ void AEomcriGameState::StartLevel()
 
 	const int32 ItemToSpawn = 40;
 
-	for (int32 i = 0; i < ItemToSpawn; i++)
+	// add 10 items per wave
+	for (int32 i = 0; i < ItemToSpawn + 10 * CurrentWaveIndex; i++)
 	{
 		if (FoundVolumes.Num() > 0)
 		{
@@ -126,7 +131,16 @@ void AEomcriGameState::EndLevel()
 {
 	GetWorldTimerManager().ClearTimer(LevelTimerHandle);
 
-	CurrentLevelIndex++;
+	// Destroy all Items
+	
+
+	//CurrentLevelIndex++;
+	CurrentWaveIndex++;
+	if (CurrentWaveIndex >= MaxWaves)
+	{
+		CurrentLevelIndex++;
+		CurrentWaveIndex = 0;
+	}
 
 	if (UGameInstance* GameInstance = GetGameInstance())
 	{
@@ -135,6 +149,7 @@ void AEomcriGameState::EndLevel()
 		{
 			AddScore(Score);
 			EomcriGameInstance->CurrentLevelIndex = CurrentLevelIndex;
+			EomcriGameInstance->CurrentWaveIndex = CurrentWaveIndex;
 		}
 	}
 

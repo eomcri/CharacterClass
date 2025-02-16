@@ -33,15 +33,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
 	TSubclassOf<UUserWidget> HUDWidgetClass;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD")
 	UUserWidget* HUDWidgetInstance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Menu")
 	TSubclassOf<UUserWidget> MainMenuWidgetClass;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Menu")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Menu")
 	UUserWidget* MainMenuWidgetInstance;
 
-	UFUNCTION(BlueprintCallable, Category="Menu")
+	UFUNCTION(Blueprintpure, Category="HUD")
 	UUserWidget* GetHUDWidget() const;
 
 	UFUNCTION(BlueprintCallable, Category = "HUD")

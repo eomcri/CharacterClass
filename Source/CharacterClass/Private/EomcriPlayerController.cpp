@@ -12,6 +12,7 @@ AEomcriPlayerController::AEomcriPlayerController()
     JumpAction(nullptr),
     LookAction(nullptr),
     SprintAction(nullptr),
+    HUDWidgetClass(nullptr),
     HUDWidgetInstance(nullptr),
 	MainMenuWidgetClass(nullptr),
 	MainMenuWidgetInstance(nullptr)
@@ -63,7 +64,7 @@ void AEomcriPlayerController::ShowMainMenu(bool bIsRestart)
         MainMenuWidgetInstance = nullptr;
     }
 
-    if (MainMenuWidgetInstance)
+    if (MainMenuWidgetClass)
     {
         MainMenuWidgetInstance = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
         if (MainMenuWidgetInstance)
@@ -102,9 +103,9 @@ void AEomcriPlayerController::ShowGameHUD()
         MainMenuWidgetInstance = nullptr;
     }
 
-    if (HUDWidgetInstance)
+    if (HUDWidgetClass)
     {
-        HUDWidgetInstance = CreateWidget<UUserWidget>(this, MainMenuWidgetClass);
+        HUDWidgetInstance = CreateWidget<UUserWidget>(this, HUDWidgetClass);
         if (HUDWidgetInstance)
         {
             HUDWidgetInstance->AddToViewport();

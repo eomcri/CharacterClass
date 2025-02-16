@@ -4,6 +4,7 @@ UEomcriGameInstance::UEomcriGameInstance()
 {
 	TotalScore = 0;
 	CurrentLevelIndex = 0;
+	CurrentWaveIndex = 0;
 }
 
 void UEomcriGameInstance::AddToScore(int32 Amount)
