@@ -154,4 +154,12 @@ void AEomcriPlayerController::StartGame()
     UGameplayStatics::OpenLevel(GetWorld(), FName("BasicLevel"));
 }
 
+void AEomcriPlayerController::StopGame()
+{
+    if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+    {
+        PlayerController->ConsoleCommand("quit");
+    }
+}
+
 
