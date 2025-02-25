@@ -8,6 +8,7 @@
 
 class USpringArmComponent; // 스프링 암 관련 클래스 헤더
 class UCameraComponent; // 카메라 관련 클래스 전방 선언
+class UWidgetComponent;
 // Enhanced Input에서 액션 값을 받을 때 사용하는 구조체
 struct FInputActionValue;
 
@@ -25,6 +26,9 @@ public:
 	// 카메라 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComp;
+	// HP 바
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	UWidgetComponent* OverheadWidget;
 
 	// 현재 체력을 가져오는 함수
 	UFUNCTION(BlueprintPure, Category = "Health")
@@ -34,6 +38,7 @@ public:
 	void AddHealth(float Amount);
 
 protected:
+	virtual void BeginPlay() override;
 
 	// 이동 속도 관련 프로퍼티들
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
@@ -52,6 +57,8 @@ protected:
 	// 사망 처리 함수 (체력이 0 이하가 되었을 때 호출)
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	virtual void OnDeath();
+
+	void UpdateOverheadHP();
 
 	// 데미지 처리 함수 - 외부로부터 데미지를 받을 때 호출됨
 	// 또는 AActor의 TakeDamage()를 오버라이드

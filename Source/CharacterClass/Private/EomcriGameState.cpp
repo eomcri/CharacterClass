@@ -175,6 +175,7 @@ void AEomcriGameState::OnGameOver()
 	{
 		if (AEomcriPlayerController* EomcriPlayerController = Cast<AEomcriPlayerController>(PlayerController))
 		{
+			EomcriPlayerController->SetPause(true);
 			EomcriPlayerController->ShowMainMenu(true);
 		}
 	}
@@ -209,6 +210,11 @@ void AEomcriGameState::UpdateHUD()
 				if (UTextBlock* ScoreText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName("Level")))
 				{
 					ScoreText->SetText(FText::FromString(FString::Printf(TEXT("Level %d-%d"), CurrentLevelIndex+1, CurrentWaveIndex+1)));
+				}
+
+				if (UTextBlock* HPText = Cast<UTextBlock>(HUDWidget->GetWidgetFromName("HP")))
+				{
+					
 				}
 			}
 		}

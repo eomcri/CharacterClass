@@ -86,6 +86,25 @@ void AEomcriPlayerController::ShowMainMenu(bool bIsRestart)
                 ButtonText->SetText(FText::FromString(TEXT("Start")));
             }
         }
+
+        if (bIsRestart)
+        {
+            UFunction* PlayAnimFunc = MainMenuWidgetInstance->FindFunction(FName("PlayGameOverAnim"));
+            if (PlayAnimFunc)
+            {
+                MainMenuWidgetInstance->ProcessEvent(PlayAnimFunc, nullptr);
+            }
+
+            if (UTextBlock* TotalScoreText =  Cast<UTextBlock>(MainMenuWidgetInstance->GetWidgetFromName(TEXT("TotalScoreText"))))
+            {
+                if (UEomcriGameInstance* EomcriGameInstance = Cast<UEomcriGameInstance>(UGameplayStatics::GetGameInstance(this)))
+                {
+                    TotalScoreText->SetText(FText::FromString(
+                        FString::Printf(TEXT("Total Score: %d"), EomcriGameInstance->TotalScore)
+                        ));
+                }
+            }
+        }
     }
 }
 
@@ -127,7 +146,9 @@ void AEomcriPlayerController::StartGame()
     if (UEomcriGameInstance* EomcriGameInstance = Cast<UEomcriGameInstance>(UGameplayStatics::GetGameInstance(this)))
     {
         EomcriGameInstance->CurrentLevelIndex = 0;
+        EomcriGameInstance->CurrentWaveIndex = 0;
         EomcriGameInstance->TotalScore = 0;
+        EomcriGameInstance->CurrentHP = 100;
     }
 
     UGameplayStatics::OpenLevel(GetWorld(), FName("BasicLevel"));

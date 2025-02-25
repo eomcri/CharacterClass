@@ -5,7 +5,10 @@
 #include "EomcriPlayerController.h"
 #include "EnhancedInputComponent.h"
 // 카메라, 스프링 암 실제 구현이 필요한 경우라서 include
+#include "EomcriGameState.h"
 #include "Camera/CameraComponent.h"
+#include "Components/TextBlock.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -31,6 +34,10 @@ AEomcriCharacter::AEomcriCharacter()
     // 카메라는 스프링 암의 회전을 따르므로 PawnControlRotation은 꺼둠
     CameraComp->bUsePawnControlRotation = false;
 
+    OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWidget"));
+    OverheadWidget->SetupAttachment(GetMesh());
+    OverheadWidget->SetWidgetSpace(EWidgetSpace::Screen);
+
     NormalSpeed = 600.0f;
     SprintSpeedMultiplier = 1.5f;
     SprintSpeed = NormalSpeed * SprintSpeedMultiplier;
@@ -40,6 +47,12 @@ AEomcriCharacter::AEomcriCharacter()
     // 초기 체력 설정
     MaxHealth = 100.0f;
     Health = MaxHealth;
+}
+
+void AEomcriCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+    UpdateOverheadHP();
 }
 
 // Called to bind functionality to input
@@ -197,7 +210,7 @@ void AEomcriCharacter::AddHealth(float Amount)
 {
     // 체력을 회복시킴. 최대 체력을 초과하지 않도록 제한함
     Health = FMath::Clamp(Health + Amount, 0.0f, MaxHealth);
-    UE_LOG(LogTemp, Log, TEXT("Health increased to: %f"), Health);
+    UpdateOverheadHP();
 }
 
 // 데미지 처리 함수
@@ -208,8 +221,8 @@ float AEomcriCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 
     // 체력을 데미지만큼 감소시키고, 0 이하로 떨어지지 않도록 Clamp
     Health = FMath::Clamp(Health - DamageAmount, 0.0f, MaxHealth);
-    UE_LOG(LogTemp, Warning, TEXT("Health decreased to: %f"), Health);
-
+    UpdateOverheadHP();
+    
     // 체력이 0 이하가 되면 사망 처리
     if (Health <= 0.0f)
     {
@@ -223,8 +236,23 @@ float AEomcriCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 // 사망 처리 함수
 void AEomcriCharacter::OnDeath()
 {
-    UE_LOG(LogTemp, Error, TEXT("Character is Dead!"));
+    AEomcriGameState* SpartaGameState = GetWorld() ? GetWorld()->GetGameState<AEomcriGameState>() : nullptr;
+    if (SpartaGameState)
+    {
+        SpartaGameState->OnGameOver();
+    }
+}
 
-    // 사망 후 로직
+void AEomcriCharacter::UpdateOverheadHP()
+{
+    if (!OverheadWidget) return;
+	
+    UUserWidget* OverheadWidgetInstance = OverheadWidget->GetUserWidgetObject();
+    if (!OverheadWidgetInstance) return;
+	
+    if (UTextBlock* HPText = Cast<UTextBlock>(OverheadWidgetInstance->GetWidgetFromName(TEXT("OverHeadHP"))))
+    {
+        HPText->SetText(FText::FromString(FString::Printf(TEXT("%.0f / %.0f"), Health, MaxHealth)));
+    }
 }
 
